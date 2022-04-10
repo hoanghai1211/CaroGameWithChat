@@ -1,0 +1,35 @@
+{
+  "name": "carogamewithchat",
+  "description": "First mini project",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoanghai1211/CaroGameWithChat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoanghai1211/CaroGameWithChat/issues"
+  },
+  "homepage": "https://github.com/hoanghai1211/CaroGameWithChat#readme",
+  "dependencies": {
+    "@babel/core": "7.15.5",
+    "@babel/node": "7.15.4",
+    "@babel/preset-env": "7.15.6",
+    "app-root-path": "3.0.0",
+    "body-parser": "1.19.0",
+    "dotenv": "10.0.0",
+    "ejs": "3.1.6",
+    "express": "4.17.3",
+    "lodash": "4.17.21",
+    "morgan": "1.10.0",
+    "multer": "1.4.3",
+    "nodemon": "2.0.12",
+    "socket.io": "4.4.1"
+  }
+}
