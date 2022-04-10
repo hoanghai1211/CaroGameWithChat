@@ -9,7 +9,7 @@ let route = express.Router();
 const initWebRoute = (app) => {
     // console.log(`Check req:`, app);
     route.get('/', homeController.getRegisterPage);
-
+    route.get('/playGame', homeController.getMainPage);
     return app.use('/', route);
 }
 

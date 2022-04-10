@@ -4,16 +4,50 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
     <title>CaroGameWithChat</title>
     <script src=" socket.io/socket.io.js"></script>
+    <!-- <script>
+        $("#login-button").click(function (event) {
+            event.preventDefault();
+
+            $('form').fadeOut(500);
+            $('.wrapper').addClass('form-success');
+        });
+    </script> -->
 </head>
 
 <body>
-    <script>
+    <!-- <script>
         //ket noi len server
         var socket = io("localhost:8686")
     </script>
-    <h1>HelloWorld</h1>
+    <h1>HelloWorld</h1> -->
+
+    <div class="wrapper">
+        <div class="container">
+            <h1>Caro Game With Chat</h1>
+
+            <form class="formLogin" action="/playGame" method="get">
+                <input type="text" placeholder="Username" name="pUsername">
+                <!-- <input type="password" placeholder="Password"> -->
+                <button type="submit" id="login-button">Join Game</button>
+            </form>
+        </div>
+
+        <!-- <ul class="bg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul> -->
+    </div>
 
 </body>
 
