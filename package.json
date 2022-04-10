@@ -3,15 +3,15 @@
   "description": "First mini project",
   "version": "1.0.0",
   "main": "server.js",
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node src/server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hoanghai1211/CaroGameWithChat.git"
   },
-  "author": "",
+  "author": "hoanghai",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/hoanghai1211/CaroGameWithChat/issues"

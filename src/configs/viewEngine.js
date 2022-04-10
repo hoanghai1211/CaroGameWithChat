@@ -1,4 +1,6 @@
-import express from 'express';
+// import express from 'express';
+var express = require('express');
+
 
 const configViewEngine = (app) => {
     app.use(express.static('./src/public')); // khai baso đường dẫn chứa các file public internet
@@ -8,3 +10,4 @@ const configViewEngine = (app) => {
 }
 
 export default configViewEngine;
+// module.exports = configViewEngine;
