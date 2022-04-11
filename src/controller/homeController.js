@@ -6,8 +6,8 @@ let getRegisterPage = (req, res) => {
 }
 
 let getMainPage = (req, res) => {
-    console.log(`>> Check req: `, req); //req.query.pUsername
-    return res.send(`Màn hình chơi game`)
+    console.log(`>> Check req: `, req.params);
+    return res.render(`main.ejs`);
 }
 
 module.exports = {

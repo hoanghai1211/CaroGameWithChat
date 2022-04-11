@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/styleLogin.css">
+    <script src="js/jquery.js"></script>
+    <script>
+
+    </script>
     <title>CaroGameWithChat</title>
-    <script src=" socket.io/socket.io.js"></script>
+
     <!-- <script>
         $("#login-button").click(function (event) {
             event.preventDefault();
@@ -18,20 +22,28 @@
 </head>
 
 <body>
-    <!-- <script>
-        //ket noi len server
-        var socket = io("localhost:8686")
-    </script>
-    <h1>HelloWorld</h1> -->
+
 
     <div class="wrapper">
         <div class="container">
             <h1>Caro Game With Chat</h1>
 
             <form class="formLogin" action="/playGame" method="get">
-                <input type="text" placeholder="Username" name="pUsername">
+                <div>
+                    <input type="text" placeholder="Username" name="username" required>
+                </div>
                 <!-- <input type="password" placeholder="Password"> -->
-                <button type="submit" id="login-button">Join Game</button>
+                <div>
+                    <select id="room" name="room">
+                        <option value="North">Room North</option>
+                        <option value="South">Room South</option>
+                        <option value="East">Room East</option>
+                        <option value="West">Room West</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" id="login-button">Join Game</button>
+                </div>
             </form>
         </div>
 
