@@ -154,11 +154,14 @@ body {
 }
 
 .chat-messages .message {
-    padding: 10px;
-    margin-bottom: 15px;
-    background-color: var(--light-color);
+    /* padding: 10px; */
+    padding-left: 10px;
+    margin-bottom: 5px;
     border-radius: 5px;
     overflow-wrap: break-word;
+    color: #606060;
+    border: solid;
+    background-color: #dcdcdc;
 }
 
 .chat-messages .message .meta {
