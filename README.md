@@ -24,11 +24,11 @@ Nguồn tài liệu tham khảo:
 
 ## Người chơi truy cập vào đường dẫn http://localhost:8686 và login
 
-![alt text](https://github.com/hoanghai1211/CaroGameWithChat/blob/main/LoginScreen.png?raw=true)
+/public/image/LoginScreen.png
 
 ## Chức năng chính
 
-![co1](Game_ChatRealtime.png)
+/public/image/Game_ChatRealtime.png
 
 
 ### Chat box
