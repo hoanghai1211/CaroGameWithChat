@@ -1,24 +1,24 @@
 # CaroGameWithChat
 Chương trình chơi cờ Caro được xây dựng với các chức năng cơ bản:
-    - User login để join vào room.
-    - Chương trình chơi cờ với 2 người chơi (2 người login đầu tiên).
-    - Người thứ 3, 4 có thể join vào room để theo dõi trận đấu (không thể đánh cờ).
-    - Chương trình có tính năng chat để người chơi và người theo dõi có thể nói chuyện với nhau qua chat box.
+* User login để join vào room.
+* Chương trình chơi cờ với 2 người chơi (2 người login đầu tiên).
+* Người thứ 3, 4 có thể join vào room để theo dõi trận đấu (không thể đánh cờ).
+* Chương trình có tính năng chat để người chơi và người theo dõi có thể nói chuyện với nhau qua chat box.
 
 Các công nghệ được sử dụng để xây dựng chương trình:
-    - Express js: framework
-    - Socket.io: công nghệ giúp xử lý giao tiếp giữa client và server
-    - D3: thư viện sử dụng trong việc vẽ bàn cờ.
+* Express js: framework
+* Socket.io: công nghệ giúp xử lý giao tiếp giữa client và server
+* D3: thư viện sử dụng trong việc vẽ bàn cờ.
 
 Nguồn tài liệu tham khảo:
-    - CaroGame: https://github.com/manhlinhhumg89/Game-Caro-use-Socketio-Expressjs.git
-    - Chat Realtime: https://github.com/bradtraversy/chatcord.git
+* CaroGame: https://github.com/manhlinhhumg89/Game-Caro-use-Socketio-Expressjs.git
+* Chat Realtime: https://github.com/bradtraversy/chatcord.git
 
 # Hướng dẫn cách chạy chương trình
-    - Tải sourcecode tại đường dẫn: https://github.com/hoanghai1211/CaroGameWithChat.git
-    - Chạy chương trình bằng lệnh trên Terminal: npm start
-    - Trên Chrome mở đường link: http://localhost:8686
-    - Nhập tên và join room.
+* Tải sourcecode tại đường dẫn: https://github.com/hoanghai1211/CaroGameWithChat.git
+* Chạy chương trình bằng lệnh trên Terminal: npm start
+* Trên Chrome mở đường link: http://localhost:8686
+* Nhập tên và join room.
 
 # Giải thích chương trình 
 
