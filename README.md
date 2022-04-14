@@ -24,7 +24,7 @@ Nguồn tài liệu tham khảo:
 
 ## Người chơi truy cập vào đường dẫn http://localhost:8686 và login
 
-![co1](LoginScreen.png)
+![alt text](https://github.com/hoanghai1211/CaroGameWithChat/blob/main/LoginScreen.png?raw=true)
 
 ## Chức năng chính
 
