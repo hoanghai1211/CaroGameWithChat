@@ -86,13 +86,12 @@ socket.on("su-kien-click", function (data) { // toạ độ x, y
 * Tại phía server lắng nghe `su-kien-click` và xử lý các bước:
     - Sử dụng mảng players để lưu thông tin lượt đánh của 2 người chơi và không cho 1 người chơi gửi dữ liệu 2 lần liên tục lên server.
     - Gửi thông tin về nước đi của user A đến toàn bộ user trong room qua hàm io.sockets.emit, sự kiện `send-play-turn`
-    - Kiểm tra bàn cờ theo phương thẳng đứng, ngang, đường chéo xem có thoả mãn 5 nước đi liền mạch không. Nếu không thì pass qua đến turn của người sau. Nếu thoả mãn thì trả kết quả cho người thua.
+    - Kiểm tra bàn cờ theo phương thẳng đứng, ngang, đường chéo xem có thoả mãn 5 nước đi liền mạch không. Nếu không thì pass qua đến turn của người sau. Nếu thoả mãn thì trả kết quả.
 * Tại phía client, sau khi nhận được thông tin về nước đi qua sự kiện `send-play-turn` thì sẽ hiển thị nước đi đó lên giao diện bàn cờ.
 
 # Hạn chế của chương trình
 
 * Chưa hoàn thiện tính năng nếu user A login vào chương trình mà đang có tab khác login bằng user A rồi thì sẽ trả ra cảnh báo.
 * Chưa xử lý vấn đề nếu người C join vào room xem giữa trận đấu của người A & B thì sẽ load được bàn cờ tại thời điểm đó.
-* Mới chỉ cảnh báo cho người thua sau khi kết thúc ván, chưa có thông báo đến toàn bộ user kết quả trận đấu.
 * Chưa có nút New Game và tạo lại bàn cờ mới.
 * Hiện ở bản Demo thì mới chỉ có 1 room North và chưa có quản lý user/ password.
