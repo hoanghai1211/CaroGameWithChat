@@ -17,12 +17,12 @@ Nguồn tài liệu tham khảo:
 # Hướng dẫn cách chạy chương trình
 * Tải sourcecode tại đường dẫn: https://github.com/hoanghai1211/CaroGameWithChat.git
 * Chạy chương trình bằng lệnh trên Terminal: npm start
-* Trên Chrome mở đường link: http://localhost:8686
+* Trên Chrome mở đường link: https://caro-game-with-chat.herokuapp.com/
 * Nhập tên và join room.
 
 # Giải thích chương trình 
 
-## Người chơi truy cập vào đường dẫn http://localhost:8686 và login
+## Người chơi truy cập vào đường dẫn https://caro-game-with-chat.herokuapp.com/ và login
 
 /public/image/LoginScreen.png
 
