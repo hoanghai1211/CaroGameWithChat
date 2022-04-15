@@ -159,7 +159,7 @@ soc.on("phat-su-kien-thang-thua", function (data) {
 })
 
 soc.on("send-result-game", (data) => {
-    resultGame = data;
+    resultGame.innerHTML = data;
 })
 
 //khi 1 trong 2 nguoi choi bi thua thi se khong cho click them vao ban co

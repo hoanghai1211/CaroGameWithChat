@@ -83,7 +83,6 @@ io.on(`connection`, (socket) => {
         console.log("Luot di cua ng choi: ", player.username, " - vitri: ", vitri, " - col:", Column, " - row:", Row);
         let opponent = players[0];
         let opponentId = users.findPlayerId(opponent);
-        console.log(`Check socket id of opponent:`, opponentId);
         //Kiem tra khong cho nguoi choi gui du lieu 2 lan lien tuc len server
         if (player.username !== players[0]) {
             players.unshift(player.username);
