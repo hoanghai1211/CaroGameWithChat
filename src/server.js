@@ -49,7 +49,8 @@ io.on(`connection`, (socket) => {
 
         // If A exists in array users => alert & return login pages
         let checkExist = users.findUsername(socket.id, username, room);
-        if (checkExist > -1) {
+        console.log(`Check exists:`, checkExist);
+        if (checkExist) {
             socket.emit(`Reject-Login`, `User is still accessed from other device! `);
         }
         else {
@@ -75,12 +76,14 @@ io.on(`connection`, (socket) => {
 
     // Event click in caro board
     socket.on("su-kien-click", function (data) { // toạ độ x, y
-
         let player = users.findPlayer(socket.id);
         let vitri = users.users.indexOf(player);
         let Column = data.x / 35;
         let Row = data.y / 35;
         console.log("Luot di cua ng choi: ", player.username, " - vitri: ", vitri, " - col:", Column, " - row:", Row);
+        let opponent = players[0];
+        let opponentId = users.findPlayerId(opponent);
+        console.log(`Check socket id of opponent:`, opponentId);
         //Kiem tra khong cho nguoi choi gui du lieu 2 lan lien tuc len server
         if (player.username !== players[0]) {
             players.unshift(player.username);
@@ -100,7 +103,9 @@ io.on(`connection`, (socket) => {
                     if (game.Horizontal(arrBoard, Row, Column, 1) || game.Vertically(arrBoard, Row, Column, 1) ||
                         game.Diagonal(arrBoard, Row, Column, 1) || game.Diagonal_main(arrBoard, Row, Column, 1)) {
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
-                        socket.broadcast.emit("phat-su-kien-thang-thua", "BAN DA THUA");
+                        io.to(opponentId).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THUA"); // Tạo popup trên màn hình người thua
+                        socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
+                        io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
                     }
                 }
             }
@@ -119,7 +124,9 @@ io.on(`connection`, (socket) => {
                     if (game.Horizontal(arrBoard, Row, Column, 2) || game.Vertically(arrBoard, Row, Column, 2) ||
                         game.Diagonal(arrBoard, Row, Column, 2) || game.Diagonal_main(arrBoard, Row, Column, 2)) {
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
-                        socket.broadcast.emit("phat-su-kien-thang-thua", "BAN DA THUA");
+                        io.to(opponentId).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THUA"); // Tạo popup trên màn hình người thua
+                        socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
+                        io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
                     }
                 }
             }

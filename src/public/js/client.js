@@ -1,9 +1,11 @@
+
 let chatForm = document.getElementById("chat-form");
 let roomName = document.getElementById("room-name");
 let chatbox = document.querySelector(".chat-messages");
 let leftSide = document.querySelector(".leftcolumn .card");
 let player1 = document.getElementById("player1");
 let player2 = document.getElementById("player2");
+let resultGame = document.getElementById("resultGame");
 
 let soc = io("http://localhost:8686");
 
@@ -154,6 +156,10 @@ soc.on("phat-su-kien-thang-thua", function (data) {
     $(document).ready(() => {
         alert(data);
     })
+})
+
+soc.on("send-result-game", (data) => {
+    resultGame = data;
 })
 
 //khi 1 trong 2 nguoi choi bi thua thi se khong cho click them vao ban co

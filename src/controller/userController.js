@@ -56,6 +56,16 @@ let findPlayer = (id) => {
     return users.find(user => user.id === id);
 }
 
+let findPlayerId = (username) => {
+    let usr = users.find(user => user.username === username);
+    if (usr) {
+        return usr.id;
+    }
+    else {
+        return null;
+    }
+}
+
 // Trả ra index của user trong mảng
 let findPlayerIndex = (player) => {
     return users.indexOf(player);
@@ -69,5 +79,6 @@ module.exports = {
     findUsername,
     findPlayers,
     findPlayerIndex,
-    users
+    users,
+    findPlayerId
 }
