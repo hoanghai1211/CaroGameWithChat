@@ -18,7 +18,7 @@ let UserJoinGame = (id, username, room) => {
     else if (index === 1) {
         users[index].status = 2; // Player 2
     }
-    console.log(`>> Array users after update: `, users);
+    // console.log(`>> Array users after update: `, users);
 
     return user;
 }
@@ -36,18 +36,19 @@ let UserLeaveGame = (id) => {
 
 
 let findUsername = (id, username, room) => {
-    return users.find((user) => {
-        user.room === room && user.username === username;
-    })
+    return users.find(user => user.username === username);
 }
 
 // Trả ra mảng 2 user là người chơi
 let findPlayers = () => {
-    if (!users[1]) {
-        return [users[0].username, ""];
-    }
+    if (users[0]) {
+        if (!users[1]) {
+            return [users[0].username, ""];
+        }
 
-    return [users[0].username, users[1].username];
+        return [users[0].username, users[1].username];
+    }
+    else return null;
 
 }
 
@@ -71,6 +72,16 @@ let findPlayerIndex = (player) => {
     return users.indexOf(player);
 }
 
+let findOpponent = (id) => {
+    let usr = users.find(user => user.id !== id && user.status > 0);
+    if (usr) {
+        return usr;
+    }
+    else {
+        return null;
+    }
+}
+
 
 module.exports = {
     UserJoinGame,
@@ -80,5 +91,6 @@ module.exports = {
     findPlayers,
     findPlayerIndex,
     users,
-    findPlayerId
+    findPlayerId,
+    findOpponent
 }

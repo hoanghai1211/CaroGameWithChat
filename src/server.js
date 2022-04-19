@@ -28,7 +28,7 @@ initWebRoute(app);
 console.log(`Init Route!!!`);
 
 // Khởi tạo mảng chứa lượt đi của 2 ng chơi
-var players = [];
+var turns = [];
 
 //init game board 15 * 15 with value init = 0
 let arrBoard = game.InitMatrix(15, 0);
@@ -76,57 +76,72 @@ io.on(`connection`, (socket) => {
 
     // Event click in caro board
     socket.on("su-kien-click", function (data) { // toạ độ x, y
+
         let player = users.findPlayer(socket.id);
-        let vitri = users.users.indexOf(player);
-        let Column = data.x / 35;
-        let Row = data.y / 35;
-        console.log("Luot di cua ng choi: ", player.username, " - vitri: ", vitri, " - col:", Column, " - row:", Row);
-        let opponent = players[0];
-        let opponentId = users.findPlayerId(opponent);
-        //Kiem tra khong cho nguoi choi gui du lieu 2 lan lien tuc len server
-        if (player.username !== players[0]) {
-            players.unshift(player.username);
-            console.log(`Mang nguoi choi cap nhat:`, players);
-            if (vitri === 0) {
-                if (arrBoard[Row][Column] === 0) {
-                    arrBoard[Row][Column] = 1;
-                    io.sockets.emit("send-play-turn", {
-                        name: player.username,
-                        x: data.x,
-                        y: data.y,
-                        nguoichoi: vitri,
-                        ArrId: players,
-                        Board: arrBoard,
-                        value: 1
-                    })
-                    if (game.Horizontal(arrBoard, Row, Column, 1) || game.Vertically(arrBoard, Row, Column, 1) ||
-                        game.Diagonal(arrBoard, Row, Column, 1) || game.Diagonal_main(arrBoard, Row, Column, 1)) {
-                        socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
-                        io.to(opponentId).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THUA"); // Tạo popup trên màn hình người thua
-                        socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
-                        io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
+        let arrNgchoi = users.findPlayers();
+
+        if (player !== undefined && arrNgchoi !== null) {
+            if (arrNgchoi.length === 2) {
+                if (arrNgchoi.includes(player.username)) {
+                    let vitri = users.users.indexOf(player);
+                    let Column = data.x / 35;
+                    let Row = data.y / 35;
+                    console.log("Luot di cua ng choi: ", player.username, " - vitri: ", vitri, " - col:", Column, " - row:", Row);
+                    let opponent = turns[0];
+                    let opponentId = users.findPlayerId(opponent);
+
+                    //Kiem tra khong cho nguoi choi gui du lieu 2 lan lien tuc len server
+                    if (player.username !== turns[0]) {
+                        turns.unshift(player.username);
+                        console.log(`Mang luot choi cap nhat:`, turns);
+                        if (vitri === 0) {
+                            if (arrBoard[Row][Column] === 0) {
+                                arrBoard[Row][Column] = 1;
+                                io.sockets.emit("send-play-turn", {
+                                    name: player.username,
+                                    x: data.x,
+                                    y: data.y,
+                                    nguoichoi: vitri,
+                                    ArrId: turns,
+                                    Board: arrBoard,
+                                    value: 1
+                                })
+                                if (game.Horizontal(arrBoard, Row, Column, 1) || game.Vertically(arrBoard, Row, Column, 1) ||
+                                    game.Diagonal(arrBoard, Row, Column, 1) || game.Diagonal_main(arrBoard, Row, Column, 1)) {
+                                    socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
+                                    io.to(opponentId).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THUA"); // Tạo popup trên màn hình người thua
+                                    socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
+                                    io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
+                                    turns = [];
+                                }
+                            }
+                        }
+                        else {
+                            if (arrBoard[Row][Column] === 0) {
+                                arrBoard[Row][Column] = 2;
+                                io.sockets.emit("send-play-turn", {
+                                    name: player.username,
+                                    x: data.x,
+                                    y: data.y,
+                                    nguoichoi: vitri,
+                                    ArrId: turns,
+                                    Board: arrBoard,
+                                    value: 2
+                                })
+                                if (game.Horizontal(arrBoard, Row, Column, 2) || game.Vertically(arrBoard, Row, Column, 2) ||
+                                    game.Diagonal(arrBoard, Row, Column, 2) || game.Diagonal_main(arrBoard, Row, Column, 2)) {
+                                    socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
+                                    io.to(opponentId).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THUA"); // Tạo popup trên màn hình người thua
+                                    socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
+                                    io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
+                                    turns = [];
+                                }
+                            }
+                        }
                     }
                 }
-            }
-            else {
-                if (arrBoard[Row][Column] === 0) {
-                    arrBoard[Row][Column] = 2;
-                    io.sockets.emit("send-play-turn", {
-                        name: player.username,
-                        x: data.x,
-                        y: data.y,
-                        nguoichoi: vitri,
-                        ArrId: players,
-                        Board: arrBoard,
-                        value: 2
-                    })
-                    if (game.Horizontal(arrBoard, Row, Column, 2) || game.Vertically(arrBoard, Row, Column, 2) ||
-                        game.Diagonal(arrBoard, Row, Column, 2) || game.Diagonal_main(arrBoard, Row, Column, 2)) {
-                        socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
-                        io.to(opponentId).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THUA"); // Tạo popup trên màn hình người thua
-                        socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
-                        io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
-                    }
+                else {
+
                 }
             }
         }
@@ -134,8 +149,41 @@ io.on(`connection`, (socket) => {
 
     // Event client A leave room
     socket.on(`disconnect`, () => {
+        let dsNgChoi = users.findPlayers();
+        let usr = users.findPlayer(socket.id);
+        let total = 0;
         let index = users.UserLeaveGame(socket.id);
+        console.log('dsNgChoi:', dsNgChoi);
+
         console.log(`User `, socket.id, ` disconnect!`);
+
+        // Check ban co da di nuoc nao chua
+        for (let i = 0; i < 15; i++) {
+            for (let j = 0; j < 15; j++) {
+                total += arrBoard[i][j];
+            }
+        }
+
+        if (dsNgChoi && usr) {
+            if (dsNgChoi.includes(usr.username)) {
+                // console.log('User là người chơi!');
+                let opponent = users.findOpponent(socket.id);
+                if (opponent) {
+                    if (total > 0) {
+                        io.to(opponent.id).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG");
+                        io.sockets.emit("send-result-game", "Người thắng cuộc:" + opponent.username);
+                    }
+                    else {
+                        dsNgChoi = users.findPlayers();
+                        io.sockets.emit(`Update-Info-Player`, dsNgChoi);
+                    }
+                }
+                else { }
+            }
+            else {
+                // console.log(`User là viewer!`);
+            }
+        }
     });
 });
 
