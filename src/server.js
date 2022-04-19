@@ -172,10 +172,12 @@ io.on(`connection`, (socket) => {
                     if (total > 0) {
                         io.to(opponent.id).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG");
                         io.sockets.emit("send-result-game", "Người thắng cuộc:" + opponent.username);
+                        turns = [];
                     }
                     else {
                         dsNgChoi = users.findPlayers();
                         io.sockets.emit(`Update-Info-Player`, dsNgChoi);
+                        turns = [];
                     }
                 }
                 else { }
