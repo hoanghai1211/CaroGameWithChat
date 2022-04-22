@@ -7,15 +7,22 @@ let player1 = document.getElementById("player1");
 let player2 = document.getElementById("player2");
 let resultGame = document.getElementById("resultGame");
 
-let soc = io("https://caro-game-with-chat.herokuapp.com/");
-// let soc = io("http://localhost:8686");
+// let soc = io("https://caro-game-with-chat.herokuapp.com/");
+let soc = io("http://localhost:8686");
 
 // xử lý url lọc lấy giá trị username và room
-let url = new URL(location.href);
-console.log(`>> Check url:`, url);
+// let url = new URL(location.href);
+// console.log(`>> Check url:`, url);
 
-let username = url.searchParams.get("username");
-let room = url.searchParams.get("room");
+// let username = url.searchParams.get("username");
+// let room = url.searchParams.get("room");
+// console.log(`Check req.body:`, req.body);
+
+console.log('Check input data:', data);
+
+let username = data.username;
+let room = data.room;
+// console.log('Check req username: ', req.body.username, ', req room:', req.body.room);
 
 // Update room name to Chat header
 roomName.innerHTML = "Room: " + room;
@@ -169,8 +176,8 @@ soc.on("khong-cho-doi-thu-click-khi-thua", function () {
 })
 
 soc.on("Reject-Login", (data) => {
-    window.location = 'https://caro-game-with-chat.herokuapp.com/';
-    // window.location = 'http://localhost:8686/';
+    // window.location = 'https://caro-game-with-chat.herokuapp.com/';
+    window.location = 'http://localhost:8686/';
 
     $(document).ready(() => {
         alert(data);
@@ -183,8 +190,8 @@ document.getElementById('leave-btn').addEventListener('click', () => {
     console.log(`>> Check location: `, location);
 
     if (leaveRoom) {
-        window.location = 'https://caro-game-with-chat.herokuapp.com/';
-        // window.location = 'http://localhost:8686/';
+        // window.location = 'https://caro-game-with-chat.herokuapp.com/';
+        window.location = 'http://localhost:8686/';
     }
 });
 

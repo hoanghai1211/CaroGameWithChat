@@ -15,7 +15,8 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "https://caro-game-with-chat.herokuapp.com/",
+            // "url": "https://caro-game-with-chat.herokuapp.com/",
+            "url": "http://localhost:8686",
             "webRoot": "${workspaceFolder}"
         }
     ]

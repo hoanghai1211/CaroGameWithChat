@@ -19,6 +19,10 @@ server.listen(port, () => {
     console.log(`App running on port: `, port);
 });
 
+// on the server side you need to add a middleware that will populate the body parameter in your request object
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // set up view engine
 configViewEngine(app);
 console.log(`config view!!!`);
@@ -29,6 +33,7 @@ console.log(`Init Route!!!`);
 
 // Khởi tạo mảng chứa lượt đi của 2 ng chơi
 var turns = [];
+var gameStatus = 0; // 0: new game; 1: game is continued; 2: game end
 
 //init game board 15 * 15 with value init = 0
 let arrBoard = game.InitMatrix(15, 0);
@@ -40,7 +45,6 @@ let arrBoard = game.InitMatrix(15, 0);
 // socket.emit --> respond to only sender
 // io.to --> server send to exactly receiver by socket.id
 io.on(`connection`, (socket) => {
-    console.log(`Start new socket from userID: `, socket.id);
 
     // Event new client A join room
     // send to only A message welcome
@@ -57,6 +61,9 @@ io.on(`connection`, (socket) => {
             // Join room
             let usr = users.UserJoinGame(socket.id, username, room);
             let players = users.findPlayers();
+            console.log(`Start new socket from user: `, username, ` - socketID: `, socket.id);
+            console.log('Array Users:', users.users);
+            console.log('Array Players:', players);
 
             message = `Welcome ` + username + ` to room ` + room;
             socket.emit(`Server-send-data`, { username, room, message, time: moment().format(`h:mm a`), status: usr.status });
@@ -82,7 +89,7 @@ io.on(`connection`, (socket) => {
 
         if (player !== undefined && arrNgchoi !== null) {
             if (arrNgchoi.length === 2) {
-                if (arrNgchoi.includes(player.username)) {
+                if (arrNgchoi.includes(player.username) && gameStatus !== 2) {
                     let vitri = users.users.indexOf(player);
                     let Column = data.x / 35;
                     let Row = data.y / 35;
@@ -113,6 +120,7 @@ io.on(`connection`, (socket) => {
                                     socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
                                     io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
                                     turns = [];
+                                    gameStatus = 2;
                                 }
                             }
                         }
@@ -135,6 +143,7 @@ io.on(`connection`, (socket) => {
                                     socket.emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG"); // Tạo popup trên màn hình người thắng
                                     io.sockets.emit("send-result-game", "Người thắng cuộc:" + player.username);
                                     turns = [];
+                                    gameStatus = 2;
                                 }
                             }
                         }
@@ -151,10 +160,11 @@ io.on(`connection`, (socket) => {
     socket.on(`disconnect`, () => {
         let dsNgChoi = users.findPlayers();
         let usr = users.findPlayer(socket.id);
+        console.log('dsNgChoi:', dsNgChoi);
+        console.log('usr:', usr);
+
         let total = 0;
         let index = users.UserLeaveGame(socket.id);
-        console.log('dsNgChoi:', dsNgChoi);
-
         console.log(`User `, socket.id, ` disconnect!`);
 
         // Check ban co da di nuoc nao chua
@@ -164,7 +174,7 @@ io.on(`connection`, (socket) => {
             }
         }
 
-        if (dsNgChoi && usr) {
+        if (dsNgChoi !== null && usr !== null) {
             if (dsNgChoi.includes(usr.username)) {
                 // console.log('User là người chơi!');
                 let opponent = users.findOpponent(socket.id);
@@ -173,6 +183,7 @@ io.on(`connection`, (socket) => {
                         io.to(opponent.id).emit("phat-su-kien-thang-thua", "BẠN ĐÃ THẮNG");
                         io.sockets.emit("send-result-game", "Người thắng cuộc:" + opponent.username);
                         turns = [];
+                        gameStatus = 2;
                     }
                     else {
                         dsNgChoi = users.findPlayers();

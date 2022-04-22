@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 
 
 let getRegisterPage = (req, res) => {
@@ -5,11 +6,17 @@ let getRegisterPage = (req, res) => {
 }
 
 let getMainPage = (req, res) => {
-    console.log(`>> Check req: `, req.params);
-    return res.render(`main.ejs`);
+    console.log(`Check login req:`, req.body);
+    return res.render(`main.ejs`, { data: req.body });
+}
+
+let RedirectLogin = () => {
+    console.log('Đã vào đây!');
+    return res.render('index.ejs');
 }
 
 module.exports = {
     getRegisterPage,
-    getMainPage
+    getMainPage,
+    RedirectLogin
 }
