@@ -174,7 +174,7 @@ io.on(`connection`, (socket) => {
             }
         }
 
-        if (dsNgChoi !== null && usr !== null) {
+        if (dsNgChoi !== null && usr !== undefined) {
             if (dsNgChoi.includes(usr.username)) {
                 // console.log('User là người chơi!');
                 let opponent = users.findOpponent(socket.id);

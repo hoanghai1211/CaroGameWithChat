@@ -9,6 +9,7 @@ Các công nghệ được sử dụng để xây dựng chương trình:
 * Express js: framework
 * Socket.io: công nghệ giúp xử lý giao tiếp giữa client và server
 * D3: thư viện sử dụng trong việc vẽ bàn cờ.
+* MySql: DB chứa dữ liệu
 
 Nguồn tài liệu tham khảo:
 * CaroGame: https://github.com/manhlinhhumg89/Game-Caro-use-Socketio-Expressjs.git
@@ -20,16 +21,116 @@ Nguồn tài liệu tham khảo:
 * Trên Chrome mở đường link: https://caro-game-with-chat.herokuapp.com/
 * Nhập tên và join room.
 
-# Giải thích chương trình 
+# Mô tả chương trình 
 
-## Người chơi truy cập vào đường dẫn https://caro-game-with-chat.herokuapp.com/ và login
+1. Người chơi truy cập vào đường dẫn https://caro-game-with-chat.herokuapp.com/ và login.
+2. Giao diện domain:
+	- Hiển thị danh sách người đã join domain (N, S,...)
+	- Hiển thị danh sách room đang available & đã full, với mỗi room sẽ có nút JOIN vào trở thành player hoặc viewer.
+	- Nút Create room: Người dùng có thể tạo 1 room mới và chờ người dùng khác join vào.
+	- Nut Leave domain: Người dùng thoát khỏi domain trở về màn hình đăng nhập.
+3. Giao diện trong Room
+	- Sau khi join vào 1 room cụ thể, các người dùng có thể tương tác:
+		+ Giao diện hiển thị tên người chơi, người thứ 1 và thứ 2 join vào room sẽ là player, còn lại là viewer.
+		+ Player & viewer có thể cùng chat vs nhau.
+		+ Nút Ready: khi cả player 1 và player 2 cùng ấn ready --> Thông báo start game và cho phép người chơi đánh cờ.
+		+ Viewer khi tick vào bàn cờ sẽ không trả ra gì. 
+		+ Khi viewer vào sau khi trận đấu đã đang diễn ra thì game sẽ show bàn cờ với các nước đã đi.
+		+ Nút Resign: khi 1 player nhận thua cuộc. Đi kèm là popup confirm bạn sẽ thua.
+        + Nút Draw: khi player A muốn kết thúc ván với kết quả hoà. Player B sẽ nhận được popup: A xin hoà?
+		+ Nút New Game: tạo ván đấu mới. Cụ thể:
+			++ Nút sẽ chìm trong quá trình ván đấu đang diễn ra.
+			++ Nút chỉ cho phép click khi ván đấu đã kết thúc.
+			++ Khi 1 player click, thông báo sẽ được gửi đến player còn lại --> Confirm thì sẽ tạo ván đấu mới.
+		+ Nút Leave Room: Thoát khỏi phòng.
+			++ Nếu là viewer thì thoát luôn k có confirm.
+			++ Nếu là player && ván đấu đang diễn ra --> Có confirm bạn sẽ thua. Khi player A thoát thì player B và viewer còn lại 
+			sẽ nhận được thông báo player A đã thoát, player B đã thắng.
+			++ Nếu là player && ván đấu chưa diễn ra --> Có confirm thoát khỏi room. Khi player A thoát thì player B và viewer sẽ nhận được thông báo A đã thoát.
+		+ Khi player A đánh xong lượt, giao diện sẽ cập nhật: Đến lượt người chơi B.
+		+ Khi ván đấu kết thúc --> trả kết quả cho người thắng, người thua, viewer.
+		+ Sau khi start game, mỗi người chơi có tối đa 3 phút suy nghĩ. Nếu ai hết 3 phút suy nghĩ trước mà chưa kết thúc ván thì người đó sẽ thua.
+		
+# Giải pháp xử lý:
+	- Lưu trữ các bản dữ liệu trên DB MySQL
+		+ Domain:
+			++ ID
+			++ Name
+		+ Room:
+			++ ID
+			++ Name
+			++ Domain ID
+            ++ CreatedDate
+            ++ UserCreated
+            ++ Status (0:Phòng đã bị huỷ bỏ (player 1 thoát phòng) ; 1: còn trống; 2: Đã full người chơi)
+		+ User 
+			++ ID tăng dần
+			++ Username
+            ++ Socket ID
+			++ Room ID
+			++ Domain ID 
+			++ Player (1: player; 0: viewer; null: khi không join room nào)
+        + Game (tại 1 thời điểm 1 room chỉ có 1 game được diễn ra)
+            ++ ID tăng dần
+            ++ Room ID
+            ++ Domain ID
+            ++ Player 1
+            ++ Player 2
+            ++ GameStatus (0: chưa diễn ra; 1: đang diễn ra; 2: đã kết thúc)
+            ++ Result (1: player 1 thắng; 2: player 2 thắng; 0: hoà)
+            ++ StartDate
+            ++ EndDate
+    - Khi user join Domain
+        + Tạo 1 bản ghi trong tbl User (room ID null, player null)
+        + Hiển thị danh sách phòng với status > 0
+    - Khi user leave Domain
+        + Xoá bản ghi của user trong tbl User
+    - Khi user create Room
+        + Tạo 1 bản ghi trong tbl Room
+        + Tạo 1 bản ghi trong tbl Game 
+    - Khi user join Room
+        + Check game của room đã full 2 người chơi chưa, nếu chưa thì update giá trị Player 2 tại tbl Game.
+        + Update trường thông tin Room ID, Player của user trong tbl User.
+        + Check nếu là Player thì sẽ hiển thị các nút: Ready, Resign, Draw, New Game
+    - Khi player kích ready
+        + Ghi 1 message vào khung chat: player A sẵn sàng.
+        + Ẩn nút Ready trên màn hình user A, active các nút Resign, Draw, New Game.
+        + Check nếu đủ 2 player ready --> Start game, update tbl Game set GameStatus = 1.
+    - Khi player A kích Draw
+        + Phía player A hiển thị popup: Bạn muốn hoà?
+        + Khi player A xác nhận, phía player B hiển thị popup: A muốn hoà.
+        + Nếu B confirm hoà --> update kết quả ván đầu vào tbl Game
+        + Nếu B reject --> Popup sang phía A là B reject, tiếp tục ván đấu.
+    - Khi player A kích Resign
+        + Phía player A hiển thị popup: Bạn muốn xin thua?
+        + Khi A xác nhận, phía player B hiển thị popup: A đã xin thua, bạn đã chiến thắng
+        + Cập nhật kết quả lên giao diện của player & viewer người chiến thắng
+    - Khi player A kích NewGame
+        + chỉ active nút New Game khi ván đấu cũ đã kết thúc.
+        + Khi player A kích, player B nhận được popup: A muốn chơi lại ván đấu mới?
+        + Player B confirm --> cập nhật lại thông tin ván đấu trong tbl Game, khởi tạo lại bàn cờ.
+        + Player B reject --> popup phía A là B reject.
+    - Khi player A kích Leave Room
+        + Nếu A là viewer --> update Room ID của A tại tbl User về null.
+        + Nếu A là player 1 (chủ phòng) & ván đấu chưa diễn ra --> popup hỏi: Bạn muốn thoát phòng?
+            ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng! Vui lòng thoát ra. Update status của phòng = 0.
+            ++ A reject --> không thực hiện gì cả.
+        + Nếu A là player 1 (chủ phòng) & ván đấu đang diễn ra --> popup hỏi: Bạn muốn thoát phòng?
+            ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng, Player 2 chiến thắng! Vui lòng thoát ra. Update status của phòng = 0. Cập nhật lại trạng thái ván đấu và khởi tạo lại bàn cờ.
+            ++ A reject --> không thực hiện gì cả.
+        + Nếu A là player 1 (chủ phòng) & ván đấu đã kết thúc --> popup hỏi: Bạn muốn thoát phòng?
+            ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng! Vui lòng thoát ra. Update status của phòng = 0. Cập nhật lại trạng thái ván đấu và khởi tạo lại bàn cờ.
+            ++ A reject --> không thực hiện gì cả.
 
-/public/image/LoginScreen.png
-
-## Chức năng chính
-
-/public/image/Game_ChatRealtime.png
-
+        + Nếu A là player 2 & ván đấu chưa diễn ra --> popup hỏi: Bạn muốn thoát phòng?
+            ++ A confirm --> thông báo đến player 1 và viewer: Player 2 đã rời khỏi phòng, vui lòng chờ người chơi mới!
+            ++ A reject --> Không thực hiện gì cả
+        + Nếu A là player 2 & ván đấu đang diễn ra --> popup hỏi: Bạn muốn thoát phòng?
+            ++ A confirm --> thông báo đến player 1 và viewer: Player 2 đã rời khỏi phòng, bạn đã chiến thắng! Vui lòng chờ người chơi mới!. Cập nhật lại trạng thái ván đấu và khởi tạo lại bàn cờ.
+            ++ A reject --> Không thực hiện gì cả
+        + Nếu A là player 2 & ván đấu đã kết thúc --> popup hỏi: Bạn muốn thoát phòng?
+            ++ A confirm --> thông báo đến player 1 và viewer: Player 2 đã rời khỏi phòng, vui lòng chờ người chơi mới!. Cập nhật lại trạng thái ván đấu và khởi tạo lại bàn cờ.
+            ++ A reject --> Không thực hiện gì cả
 
 ### Chat box
 
