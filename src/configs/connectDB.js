@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+require('dotenv').config();
 
 console.log("Create connection pool...");
 var pool;
