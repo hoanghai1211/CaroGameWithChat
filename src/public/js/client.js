@@ -31,7 +31,7 @@ let soc = io("https://caro-game-with-chat.herokuapp.com/");
 var boxsize = 35 // kich thuoc cua moi o vuong
 var n = 15 // so luong o vuong tren 1 hang
 var svg = "";
-var max_time = 180;
+var max_time = 120;
 
 // Init var from input data
 console.log('Check input data:', data);
