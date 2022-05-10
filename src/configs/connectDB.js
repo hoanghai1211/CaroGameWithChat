@@ -4,7 +4,7 @@ require('dotenv').config();
 console.log("Create connection pool...");
 var pool;
 
-if (isTEST) {
+if (process.env.isTEST) {
     pool = mysql.createPool({
         host: "localhost",
         database: "CaroGame",
