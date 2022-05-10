@@ -1,5 +1,4 @@
 import mysql from 'mysql2/promise';
-require('dotenv').config();
 
 console.log("Create connection pool at prod env ...");
 const pool = mysql.createPool({
@@ -10,7 +9,7 @@ const pool = mysql.createPool({
 })
 
 // console.log("Create connection pool at test env ...");
-// pool = mysql.createPool({
+// const pool = mysql.createPool({
 //     host: "localhost",
 //     database: "CaroGame",
 //     user: "haiht",

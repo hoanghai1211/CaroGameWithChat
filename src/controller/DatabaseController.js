@@ -20,7 +20,8 @@ let listRoomsInDomain = async (domainID) => {
          from rooms a,
               domains b
          where a.DomainID = b.ID
-           and b.ID = ` + domainID + `;`;
+           and b.ID = ` + domainID + `
+           and a.Status != 0;`;
 
     const [rows] = await pool.execute(str_query);
     // console.log(`Check danh sach room trong domain:`, rows);
