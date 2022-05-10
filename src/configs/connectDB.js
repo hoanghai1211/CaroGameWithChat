@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
 require('dotenv').config();
 
-console.log("Create connection pool...");
 var pool;
 
 if (process.env.isTEST) {
+    console.log("Create connection pool at test env ...");
     pool = mysql.createPool({
         host: "localhost",
         database: "CaroGame",
@@ -13,6 +13,7 @@ if (process.env.isTEST) {
     })
 }
 else { // Production
+    console.log("Create connection pool at prod env ...");
     pool = mysql.createPool({
         host: "us-cdbr-east-05.cleardb.net",
         database: "heroku_e3ab0ef9ae93fcb",
