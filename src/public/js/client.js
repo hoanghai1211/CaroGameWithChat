@@ -24,8 +24,8 @@ let NewGameBtn = document.getElementById("NewGame");
 let turn = document.getElementById("turn");
 let result = document.getElementById("resultGame");
 
-// let soc = io("https://caro-game-with-chat.herokuapp.com/");
-let soc = io("http://localhost:8686");
+let soc = io("https://caro-game-with-chat.herokuapp.com/");
+// let soc = io("http://localhost:8686");
 
 //-------------------------------------------------------
 var boxsize = 35 // kich thuoc cua moi o vuong
@@ -714,8 +714,8 @@ soc.on("prevent-click-onboard", function () {
 })
 
 soc.on("Reject-Login", (data) => {
-    // window.location = 'https://caro-game-with-chat.herokuapp.com/';
-    window.location = 'http://localhost:8686/';
+    window.location = 'https://caro-game-with-chat.herokuapp.com/';
+    // window.location = 'http://localhost:8686/';
 
     $(document).ready(() => {
         alert(data);
