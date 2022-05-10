@@ -1,0 +1,106 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styleChatBox.css">
+    <link rel="stylesheet" href="/css/w3.css">
+    <title>CaroGame</title>
+
+</head>
+
+<body>
+
+    <div class="header">
+        <h3>CARO GAME</h3>
+    </div>
+
+    <div class="row">
+        <div class="leftcolumn">
+            <div class="card">
+                <h4>DANH SÁCH PHÒNG CHƠI</h4>
+                <h5>Số lượng: <%= dataRoom.length %> phòng</h5>
+
+                <table class="w3-table-all w3-hoverable">
+                    <thead>
+                        <tr class="w3-light-grey">
+                            <th>ID</th>
+                            <th>Room Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <% for(let i=0; i < dataRoom.length; i++) { %>
+                            <tr>
+                                <td>
+                                    <%= dataRoom[i].ID %>
+                                </td>
+                                <td>
+                                    <%= dataRoom[i].Name %>
+                                </td>
+                                <td style="display: flex; gap: 10px">
+                                    <form action="/JoinRoom/<%= dataRoom[i].Name %>" method="post">
+                                        <input type="text" hidden name="pUsername" value="<%= userLogin %>" />
+                                        <input type="text" hidden name="pDomain" value="<%= domain.name %>" />
+                                        <input type="text" hidden name="pDomainID" value="<%= domain.id %>" />
+                                        <input type="text" hidden name="pRoom" value="<%= dataRoom[i].Name %>" />
+                                        <button type="submit">Join</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+        <div class="rightcolumn">
+            <div class="card">
+                <h4>DOMAIN <%= domain.name %>
+                </h4>
+                <table>
+                    <tr>
+                        <td style="display: flex; gap: 10px">
+                            <form action="/CreateRoom" method="post">
+                                <label>Room Name</label>
+                                <input type="text" name="pRoom" required /><br>
+                                <input type="text" hidden name="pUsername" value="<%= userLogin %>" />
+                                <input type="text" hidden name="pDomain" value="<%= domain.name %>" />
+                                <input type="text" hidden name="pDomainID" value="<%= domain.id %>" />
+                                <button type="submit">Create New Room</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+
+                <form action="/domain/LeaveDomain" method="post">
+                    <input type="text" hidden name="pUsername" value="<%= userLogin %>" />
+                    <input type="text" hidden name="pDomain" value="<%= domain.name %>" />
+                    <input type="text" hidden name="pDomainID" value="<%= domain.id %>" />
+                    <button type="submit">Leave Domain</button>
+                </form>
+
+            </div>
+
+            <div class="card">
+                <h4>NGƯỜI CHƠI ĐANG ONLINE</h4>
+                <h5>Người chơi: <%= userLogin %>
+                </h5>
+                <h5>Số lượng: <%= dataUser.length %> người chơi</h5>
+                <% for(let i=0; i < dataUser.length; i++) { %>
+                    <div class="fakeimg">
+                        <%= dataUser[i].Username %>
+                    </div><br>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

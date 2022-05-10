@@ -24,6 +24,32 @@ let InitMatrix = function (n, init) {
  [ 0, 0, 0, 0, 0, 0, 0, 0 ],
  [ 0, 0, 0, 0, 0, 0, 0, 0 ] ]*/
 
+let ConvertMatrixToString = (arrBoard) => {
+    let str_arrBoard = "";
+    for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+            if (j === 0) {
+                str_arrBoard += "[" + arrBoard[i][j] + ",";
+            }
+            else if (i === 14 && j === 14) {
+                str_arrBoard += arrBoard[i][j] + "]";
+            }
+            else if (j === 14 && i != 14) {
+                str_arrBoard += arrBoard[i][j] + "],";
+            }
+            else {
+                str_arrBoard += arrBoard[i][j] + ",";
+            }
+        }
+    }
+    return str_arrBoard;
+}
+
+let ConvertStringToMatrix = (str_arrBoard) => {
+    let arrBoard = eval("[" + str_arrBoard + "]");
+    return arrBoard;
+}
+
 //Kiem tra thang thua khi nguoi choi danh nuoc moi tren ban co
 //Kiểm tra theo phương ngang từ vị trí hiện tại đi sang trái và sang phải đếm xem có đủ 5 quân cùng giá trị thì trả về true
 let Horizontal = (Mat, Cur_row, Cur_col, Value) => {
@@ -145,6 +171,7 @@ module.exports = {
     Horizontal,
     Vertically,
     Diagonal,
-    Diagonal_main
-
+    Diagonal_main,
+    ConvertMatrixToString,
+    ConvertStringToMatrix
 }

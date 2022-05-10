@@ -34,7 +34,7 @@ Nguồn tài liệu tham khảo:
 		+ Giao diện hiển thị tên người chơi, người thứ 1 và thứ 2 join vào room sẽ là player, còn lại là viewer.
 		+ Player & viewer có thể cùng chat vs nhau.
 		+ Nút Ready: khi cả player 1 và player 2 cùng ấn ready --> Thông báo start game và cho phép người chơi đánh cờ.
-		+ Viewer khi tick vào bàn cờ sẽ không trả ra gì. 
+		+ Viewer khi tick vào bàn cờ sẽ không trả ra Egì. 
 		+ Khi viewer vào sau khi trận đấu đã đang diễn ra thì game sẽ show bàn cờ với các nước đã đi.
 		+ Nút Resign: khi 1 player nhận thua cuộc. Đi kèm là popup confirm bạn sẽ thua.
         + Nút Draw: khi player A muốn kết thúc ván với kết quả hoà. Player B sẽ nhận được popup: A xin hoà?
@@ -70,7 +70,7 @@ Nguồn tài liệu tham khảo:
 			++ Room ID
 			++ Domain ID 
 			++ Player (1: player; 0: viewer; null: khi không join room nào)
-        + Game (tại 1 thời điểm 1 room chỉ có 1 game được diễn ra)
+        + Games (tại 1 thời điểm 1 room chỉ có 1 game được diễn ra)
             ++ ID tăng dần
             ++ Room ID
             ++ Domain ID
@@ -78,48 +78,67 @@ Nguồn tài liệu tham khảo:
             ++ Player 2
             ++ GameStatus (0: chưa diễn ra; 1: đang diễn ra; 2: đã kết thúc)
             ++ Result (1: player 1 thắng; 2: player 2 thắng; 0: hoà)
-            ++ StartDate
-            ++ EndDate
+            ++ Player1_Status (khi Player1 Ready thì cập nhật trạng thái = 1)
+            ++ Player2_Status
+            ++ arrBoard: ma trận bàn cờ dạng string
+            ++ NextTurn: giá trị là user sẽ đánh nước tiếp theo
+    - Chương trình hiện tại chỉ quản lý các user đang login vào chương trình, không quản lý theo password và lịch sử đăng nhập.
     - Khi user join Domain
+        + Check nếu user đã tồn tại trong bảng Users (đang login) thì alert và không cho login.
         + Tạo 1 bản ghi trong tbl User (room ID null, player null)
         + Hiển thị danh sách phòng với status > 0
     - Khi user leave Domain
         + Xoá bản ghi của user trong tbl User
     - Khi user create Room
-        + Tạo 1 bản ghi trong tbl Room
-        + Tạo 1 bản ghi trong tbl Game 
+        + Tạo 1 bản ghi trong tbl Room, nếu Room name đã tồn tại thì alert.
+        + Tạo 1 bản ghi trong tbl Game, khởi tạo bàn cờ và update vào arrBoard trong tbl games
     - Khi user join Room
         + Check game của room đã full 2 người chơi chưa, nếu chưa thì update giá trị Player 2 tại tbl Game.
         + Update trường thông tin Room ID, Player của user trong tbl User.
-        + Check nếu là Player thì sẽ hiển thị các nút: Ready, Resign, Draw, New Game
+        + Check nếu là Player và phòng đã full 2 người chơi thì sẽ hiển thị các nút: Ready
     - Khi player kích ready
         + Ghi 1 message vào khung chat: player A sẵn sàng.
-        + Ẩn nút Ready trên màn hình user A, active các nút Resign, Draw, New Game.
+        + Ẩn nút Ready trên màn hình user A, active các nút Resign, Draw. New Game chỉ hiện thị khi ván đấu đã kết thúc.
         + Check nếu đủ 2 player ready --> Start game, update tbl Game set GameStatus = 1.
+    - Start Game:
+        + Thông báo đến lượt chơi người thứ 1
+        + Available các nút Draw, Resign
+        + Visible label Timer của 2 người chơi
+        + Đếm ngược countdown thời gian suy nghĩ: tối đa 3 phút/  người chơi 1 ván.
+        + Khi người chơi đi xong turn thì sẽ dừng biến đếm và chuyển sang biến đếm của ng chơi còn lại.
+        + Nếu ván đấu kết thúc thì dừng biến đếm của cả 2
+        + Nếu ai hết thời gian trước thì thua
+    - Sự kiện người chơi đánh cờ
+        + Server socket nhận sự kiện su-kien-click
+        + Server check nước đi có hợp lệ k và gửi lại all client trong room theo sự kiện send-play-turn
+        + Client bắt sự kiện send-play-turn để vẽ lên bàn cờ
+        + trong sự kiện send-play-turn, thực hiện dừng biến đếm thời gian của người chơi vừa đánh. Nếu ván chưa kết thúc thì bật biến đếm thời gian của đối thủ.
     - Khi player A kích Draw
         + Phía player A hiển thị popup: Bạn muốn hoà?
+        + Các nút Draw, Resign, NewGame ở 2 player sẽ bị disable cho đến khi có kết quả.
         + Khi player A xác nhận, phía player B hiển thị popup: A muốn hoà.
-        + Nếu B confirm hoà --> update kết quả ván đầu vào tbl Game
+        + Nếu B confirm hoà --> update kết quả ván đầu vào tbl Game. Active nút NewGame.
         + Nếu B reject --> Popup sang phía A là B reject, tiếp tục ván đấu.
     - Khi player A kích Resign
         + Phía player A hiển thị popup: Bạn muốn xin thua?
         + Khi A xác nhận, phía player B hiển thị popup: A đã xin thua, bạn đã chiến thắng
         + Cập nhật kết quả lên giao diện của player & viewer người chiến thắng
+        + Active nút new game.
     - Khi player A kích NewGame
         + chỉ active nút New Game khi ván đấu cũ đã kết thúc.
         + Khi player A kích, player B nhận được popup: A muốn chơi lại ván đấu mới?
         + Player B confirm --> cập nhật lại thông tin ván đấu trong tbl Game, khởi tạo lại bàn cờ.
         + Player B reject --> popup phía A là B reject.
-    - Khi player A kích Leave Room
+    - Khi player A kích Leave Room hoặc disconnect socket.io
         + Nếu A là viewer --> update Room ID của A tại tbl User về null.
         + Nếu A là player 1 (chủ phòng) & ván đấu chưa diễn ra --> popup hỏi: Bạn muốn thoát phòng?
             ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng! Vui lòng thoát ra. Update status của phòng = 0.
             ++ A reject --> không thực hiện gì cả.
         + Nếu A là player 1 (chủ phòng) & ván đấu đang diễn ra --> popup hỏi: Bạn muốn thoát phòng?
-            ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng, Player 2 chiến thắng! Vui lòng thoát ra. Update status của phòng = 0. Cập nhật lại trạng thái ván đấu và khởi tạo lại bàn cờ.
+            ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng, Player 2 chiến thắng! Vui lòng thoát ra. Update status của phòng = 0. Cập nhật lại trạng thái ván đấu.
             ++ A reject --> không thực hiện gì cả.
         + Nếu A là player 1 (chủ phòng) & ván đấu đã kết thúc --> popup hỏi: Bạn muốn thoát phòng?
-            ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng! Vui lòng thoát ra. Update status của phòng = 0. Cập nhật lại trạng thái ván đấu và khởi tạo lại bàn cờ.
+            ++ A confirm --> thông báo đến player 2 và viewer: Chủ phòng đã rời khỏi phòng! Vui lòng thoát ra. Update status của phòng = 0. Cập nhật lại trạng thái ván đấu.
             ++ A reject --> không thực hiện gì cả.
 
         + Nếu A là player 2 & ván đấu chưa diễn ra --> popup hỏi: Bạn muốn thoát phòng?
@@ -190,9 +209,11 @@ socket.on("su-kien-click", function (data) { // toạ độ x, y
     - Kiểm tra bàn cờ theo phương thẳng đứng, ngang, đường chéo xem có thoả mãn 5 nước đi liền mạch không. Nếu không thì pass qua đến turn của người sau. Nếu thoả mãn thì trả kết quả.
 * Tại phía client, sau khi nhận được thông tin về nước đi qua sự kiện `send-play-turn` thì sẽ hiển thị nước đi đó lên giao diện bàn cờ.
 
-# Hạn chế của chương trình
 
-* Chưa hoàn thiện tính năng nếu user A login vào chương trình mà đang có tab khác login bằng user A rồi thì sẽ trả ra cảnh báo.
-* Chưa xử lý vấn đề nếu người C join vào room xem giữa trận đấu của người A & B thì sẽ load được bàn cờ tại thời điểm đó.
-* Chưa có nút New Game và tạo lại bàn cờ mới.
-* Hiện ở bản Demo thì mới chỉ có 1 room North và chưa có quản lý user/ password.
+# Vướng mắc
+
+* Chưa bắt được sự kiện session tự end sau 1h. Dẫn đến nếu user không leave domain mà chỉ tắt trình duyệt thì sau 1h session end, user vẫn chưa bị xoá khỏi bảng user. Khi user bật trình duyệt lên đăng nhập lại user đó thì sẽ bị thông báo user exists! và phải sử dụng user khác (k có pass).
+
+* Chưa rõ vì sao khi test local, 2 user dùng cùng trình duyệt Chrome (1 mở 1 ẩn) thì khi A request hoà hoặc NewGame thì B không hiển thị popup. Nếu 2 user dùng 2 trình duyệt khác nhau (Chrome và Safari) thì OK.
+
+* Khi phía 1 người chơi request hoà hoặc resign thì Popup hiện lên làm biến đếm countdown của phía người chơi đó mất đồng bộ với giá trị thực tế.

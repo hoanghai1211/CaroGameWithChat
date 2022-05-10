@@ -4,8 +4,10 @@ import appRootPath from 'app-root-path';
 
 
 const configViewEngine = (app) => {
-    app.use(express.static(appRootPath.path + '/src/public')); // khai baso đường dẫn chứa các file public internet
-    // console.log(`Check approotpath: `, appRootPath.path);
+    const static_path = appRootPath.path + '/src/public';
+    console.log('Check static path: ', static_path);
+
+    app.use(express.static(static_path)); // khai baso đường dẫn chứa các file public internet
     // app.use(express.static(__dirname + '/public'));
     app.set("view engine", "ejs");
     app.set("views", "./src/views");

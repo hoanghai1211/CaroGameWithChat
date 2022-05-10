@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_blog_layout"> -->
     <link rel="stylesheet" href="/css/styleChatBox.css">
+    <link rel="stylesheet" href="/css/GameStyle.css">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="socket.io/socket.io.js"></script>
-    <script src="js/jquery.js"></script>
-    <!-- <script src="js/client.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/jquery.js"></script>
+
     <title>PlayGame</title>
 </head>
 
@@ -25,11 +26,18 @@
                 <h2>Caro Game</h2>
                 <label>PLAYER 1:</label>
                 <a type="text" id="player1"></a>
+                <label style="display: none" id="lb-player1-timer"> - TIMER:</label>
+                <a type="text" id="player1-timer"></a>
                 <br />
+
                 <label>PLAYER 2:</label>
                 <a type="text" id="player2"></a>
+                <label style="display: none" id="lb-player2-timer"> - TIMER:</label>
+                <a type="text" id="player2-timer"></a>
                 <br />
-                <div id="resultGame"></div>
+                <a type="text" id="turn"></a>
+                <br />
+                <a type="text" id="resultGame"></a>
                 <br />
                 <br />
 
@@ -37,12 +45,24 @@
         </div>
         <div class="rightcolumn">
             <div class="card">
+                <h2>Action
+                </h2>
+
+                <button class="action-btn" style="display: none" onclick="ReadyToPlay()" id="Ready">Ready</button>
+                <button class="action-btn" style="display: none" onclick="RequestDraw()" id="Draw">Draw</button>
+                <button class="action-btn" style="display: none" onclick="Resign()" id="Resign">Resign</button>
+                <button class="action-btn" style="display: none" onclick="RequestNewGame()" id="NewGame">New
+                    Game</button>
+
+            </div>
+
+            <div class="card">
                 <h2>Chat box</h2>
                 <div class="chat-container">
                     <header class="chat-header">
                         <h3 id="room-name"></h3>
-                        <!-- <a id="leave-btn" class="btn">Leave Room</a> -->
-                        <button type="submit" id="leave-btn" class="btn">Leave Room</button>
+                        <!-- <button type="submit" id="leave-btn" class="btn">Leave Room</button> -->
+                        <button id="leave-btn" class="btn" onclick="LeaveRoom()">Leave Room</button>
                     </header>
                     <main class="chat-main">
                         <!-- <div class="chat-sidebar">
@@ -64,9 +84,17 @@
         </div>
     </div>
     <script>
-        var data = JSON.parse('{ "username": "<%=data.username%>", "room": "<%=data.room%>"}');
+        var data = JSON.parse(`{ 
+            "username": "<%= user %>", 
+            "room": "<%= room %>", 
+            "domain": "<%= domain.name %>", 
+            "domainID": "<%=domain.id%>", 
+            "isPlayer": "<%= isPlayer %>",
+            "countPlayer": "<%= countPlayer %>",
+            "Player1": "<%= Player1 %>",
+            "Player2": "<%= Player2 %>"}`);
     </script>
-    <script src="js/client.js"></script>
+    <script src="/js/client.js"></script>
 </body>
 
 </html>
