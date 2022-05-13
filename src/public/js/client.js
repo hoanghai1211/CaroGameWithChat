@@ -152,8 +152,7 @@ soc.on('Draw-Game-Board', (data) => {
                         .style("stroke", "black")
                         .on("click", function () {
                             if (!isWaitingSrvRes) {
-                                isWaitingSrvRes = true;
-                                console.log('Check biến isWaitingSrvRes:', isWaitingSrvRes);
+                                isWaitingSrvRes = true; // Không cho phép kích 2 lần
 
                                 let selected = d3.select(this);
                                 soc.emit("su-kien-click", {
