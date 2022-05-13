@@ -428,6 +428,9 @@ io.on(`connection`, (socket) => {
                             NextTurn = opponent.Username;
                             str_arrBoard = game.ConvertMatrixToString(arrBoard);
 
+                            // Cập nhật NextTurn vào tbl games
+                            await DatabaseController.updateNextTurn(data.room, data.domainID, NextTurn, str_arrBoard);
+
                             // Hiển thị lượt đi tiếp theo lên client
                             io.to(data.room).emit("Next-turn", {
                                 'Player': opponent.Username,
@@ -436,9 +439,6 @@ io.on(`connection`, (socket) => {
                                 'room': data.room,
                                 'domainID': data.domainID
                             })
-
-                            // Cập nhật NextTurn vào tbl games
-                            await DatabaseController.updateNextTurn(data.room, data.domainID, NextTurn, str_arrBoard);
                         }
                     }
                 }
@@ -484,6 +484,9 @@ io.on(`connection`, (socket) => {
                         NextTurn = opponent.Username;
                         str_arrBoard = game.ConvertMatrixToString(arrBoard);
 
+                        // Cập nhật NextTurn vào tbl games
+                        await DatabaseController.updateNextTurn(data.room, data.domainID, NextTurn, str_arrBoard);
+
                         // Hiển thị lượt đi tiếp theo lên client
                         io.to(data.room).emit("Next-turn", {
                             'Player': opponent.Username,
@@ -492,9 +495,6 @@ io.on(`connection`, (socket) => {
                             'room': data.room,
                             'domainID': data.domainID
                         })
-
-                        // Cập nhật NextTurn vào tbl games
-                        await DatabaseController.updateNextTurn(data.room, data.domainID, NextTurn, str_arrBoard);
                     }
                 }
             }
