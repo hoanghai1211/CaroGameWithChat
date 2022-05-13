@@ -32,6 +32,7 @@ var boxsize = 35 // kich thuoc cua moi o vuong
 var n = 15 // so luong o vuong tren 1 hang
 var svg = "";
 var max_time = 120;
+var isWaitingSrvRes = false;
 
 // Init var from input data
 console.log('Check input data:', data);
@@ -150,18 +151,21 @@ soc.on('Draw-Game-Board', (data) => {
                         .attr("fill", "#f4f3f7")
                         .style("stroke", "black")
                         .on("click", function () {
-                            let selected = d3.select(this);
-                            soc.emit("su-kien-click", {
-                                'username': username,
-                                'room': room,
-                                'domainID': domainID,
-                                'Player1': Player1,
-                                'Player2': Player2,
-                                'isPlayer': isPlayer,
-                                'x': selected.attr('x'),
-                                'y': selected.attr('y')
-                            })
+                            if (!isWaitingSrvRes) {
+                                isWaitingSrvRes = true;
 
+                                let selected = d3.select(this);
+                                soc.emit("su-kien-click", {
+                                    'username': username,
+                                    'room': room,
+                                    'domainID': domainID,
+                                    'Player1': Player1,
+                                    'Player2': Player2,
+                                    'isPlayer': isPlayer,
+                                    'x': selected.attr('x'),
+                                    'y': selected.attr('y')
+                                })
+                            }
                         });
                 }
                 else {
@@ -234,6 +238,7 @@ soc.on('Draw-Game-Board', (data) => {
 
 // Start game
 soc.on(`Start-game`, (data) => {
+    isWaitingSrvRes = false;
     let message = "Ván đấu bắt đầu, đến lượt đi của người chơi: " + Player1;
     turn.innerHTML = message;
     turn.style.color = "orange";
@@ -288,6 +293,7 @@ soc.on(`Start-game`, (data) => {
 
 // Lượt đi kế tiếp
 soc.on("Next-turn", (data) => {
+    isWaitingSrvRes = false;
     turn.innerHTML = data.message;
 
     if (isPlayer == 1) {
