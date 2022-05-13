@@ -212,12 +212,6 @@ socket.on("su-kien-click", function (data) { // toạ độ x, y
 
 # Vướng mắc
 
-* Khi người chơi click vào bàn cờ, sự kiện click gửi lên server và server sẽ xử lý:
-    - Check các điều kiện: có phải ng chơi và có đúng lượt của ng chơi đó? trạng thái ván đấu có phải vẫn đang tiếp diễn? ô click đã được đánh trước đó chưa?
-    - Nếu thoả mãn tất cả các điều kiện trên thì mới được tính là nước đi hợp lệ và được xử lý tiếp: vẽ lên bàn cờ của toàn bộ client trong room, cập nhật trạng thái ván cờ, ma trận bàn cờ, nước đi tiếp theo vào DB. Dừng biến đếm giờ của người vừa đánh và bật biến đếm giờ của người chơi tiếp theo.
- --> Khi test trên local, tốc độ xử lý server và DB nhanh dẫn đến k có độ trễ, bộ biến đếm của 2 người chơi được bật tắt k có vấn đề gì.
- --> Khi check trên prod, tốc độ xử lý server và DB có độ trễ, dẫn đến nếu như double click quá nhanh và 1 ô thì bộ biến đếm bị mất đồng bộ, dẫn đến lỗi đếm thời gian. Nếu như k double click thì chương trình chạy bình thường. 
-
 * Chưa bắt được sự kiện session tự end sau 1h. Dẫn đến nếu user không leave domain mà chỉ tắt trình duyệt thì sau 1h session end, user vẫn chưa bị xoá khỏi bảng user. Khi user bật trình duyệt lên đăng nhập lại user đó thì sẽ bị thông báo user exists! và phải sử dụng user khác (k có pass).
 
 * Chưa rõ vì sao khi test local, 2 user dùng cùng trình duyệt Chrome (1 mở 1 ẩn) thì khi A request hoà hoặc NewGame thì B không hiển thị popup. Nếu 2 user dùng 2 trình duyệt khác nhau (Chrome và Safari) thì OK.
